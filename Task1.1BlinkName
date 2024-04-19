@@ -1,0 +1,49 @@
+const int ledPin = LED_BUILTIN;  // Use the built-in LED pin
+
+String name = "ANISH";  // Insert name here
+String morseCode = "";    // Will store the Morse code for the name
+
+// Converts characters to Morse code
+void setupMorseCode() {
+    String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    String morse[] = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+                      "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+                      "..-", "...-", ".--", "-..-", "-.--", "--.."};
+    for (char &c : name) {
+        int index = alphabet.indexOf(c);
+        if (index != -1) {
+            morseCode += morse[index] + " ";  // Space for letter separation
+        }
+    }
+    morseCode += " ";  // Space to signify repeat after a pause
+}
+
+void setup() {
+    pinMode(ledPin, OUTPUT);
+    setupMorseCode();  // Preparing the Morse code translation
+}
+
+void loop() {
+    blinkMorseCode();  // Blinking the Morse code repeatedly
+}
+
+void blinkMorseCode() {
+    for (char &c : morseCode) {
+        if (c == '.') {
+            // Dot: short blink
+            digitalWrite(ledPin, HIGH);
+            delay(200);  // dot length
+            digitalWrite(ledPin, LOW);
+            delay(200);  // space between signals within a letter
+        } else if (c == '-') {
+            // Dash: long blink
+            digitalWrite(ledPin, HIGH);
+            delay(600);  // dash length
+            digitalWrite(ledPin, LOW);
+            delay(200);  // space between signals within a letter
+        } else {
+            delay(600);  // space between letters or extra pause between name repetitions
+        }
+    }
+    delay(1400);  // space between name repetitions
+}
